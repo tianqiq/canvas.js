@@ -1,0 +1,47 @@
+<html>
+<head>
+    <script src="tools.js"></script>
+    <script>
+        include('html5', 'tools', 'Objs/Ball');
+
+        window.onload = function () {
+
+            var canvas = document.getElementById("c");
+
+            var g = new Game(new Rect(0, 0, 600, 600), canvas);
+            g.on("click", function () {
+                g.addObj(ballPool.take());
+                g.addObj(ballPool.take());
+                g.addObj(ballPool.take());
+            });
+
+            function randColor(){
+                return "rgba({0},{1},{2},0.5)".format(Math.floor(Math.random() * 250),Math.floor(Math.random() * 250),Math.floor(Math.random() * 250));
+            }
+
+            var mouse = g.getMouse();
+            var ballPool = new Pool(function () {
+                var b = new Ball(new Rect(mouse.x, mouse.y, 600, 600), new Vector(parseInt(Math.random() * (360 - 0) + 0) * Math.PI / 180, Math.random() * 12 + 5));
+                b.addPower(new Vector(Math.PI / 2, 0.05));
+                b.radius = parseInt(Math.random() * 30) + 20;
+                b.mass = b.radius * Math.sqrt(b.radius);
+                b.color = randColor();
+                return b;
+            }, function (o) {
+                o.speed = new Vector(parseInt(Math.random() * (360 - 0) + 0) * Math.PI / 180, Math.random() * 10);
+               // o.addPower(new Vector(Math.PI / 2, 0.3));
+            });
+
+            ~function start() {
+                requestAnimationFrame(start);
+                g.start();
+            }();
+
+        }
+
+    </script>
+</head>
+<body style="text-align:center">
+<canvas width="600" height="600" id="c" style="border:1px solid #ccc;"></canvas>
+</body>
+</html>
